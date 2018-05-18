@@ -1,0 +1,54 @@
+const winston = require('winston')
+const moment = require('moment')
+const { createLogger, format, transports } = require('winston')
+function formatParams(info) {
+  const { timestamp, level, message, ...args } = info
+  const ts = moment(timestamp).format('YYYY/MM/DD HH:mm:ss SSS')
+
+  return `${ts} ${level}: ${JSON.stringify(message)} ${
+    Object.keys(args).length ? JSON.stringify(args, '', '') : ''
+  }`
+}
+const tsFormat = () => new Date()
+
+const developmentFormat = format.combine(
+  format.colorize(),
+  format.timestamp(),
+  // format.json()
+  // format.simple()
+  format.printf(formatParams)
+)
+const options = {
+  file: {
+    level: 'info',
+    filename: process.env.LOG_PATH || `${__dirname}/logs/app.log`,
+    handleExceptions: true,
+    json: true,
+    maxsize: 5242880, // 5MB
+    maxFiles: 5,
+    colorize: false
+  },
+  console: {
+    level: 'debug',
+    format: developmentFormat,
+    handleExceptions: true,
+    json: false,
+    colorize: true
+  }
+}
+
+var logger = winston.createLogger({
+  transports: [
+    new winston.transports.File(options.file),
+    new winston.transports.Console(options.console)
+  ],
+  exitOnError: false // do not exit on handled exceptions
+})
+
+logger.stream = {
+  write: function(message, encoding) {
+    logger.info(message)
+  }
+}
+
+module.exports = logger

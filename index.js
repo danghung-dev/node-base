@@ -1,16 +1,9 @@
-require('dotenv').config();
-
-const http = require('http')
-const express = require('./services/express')
-const api = require('./routes')
 const config = require('./config/config')
+const app = require('./config/express')
+const logger = require('./config/logger')
 
-let app = express('/mock', api)
-app.server = http.createServer(app)
-
-app.server.listen(config.port, () => {
-    console.log(`Started on port ${app.server.address().port}`)
+app.listen(config.port, () => {
+  logger.info(`Started on port ${config.port}`)
 })
 
 module.exports = app
-

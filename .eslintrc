@@ -1,4 +1,5 @@
 {
+  "extends": "airbnb-base",
   "rules": {
     "indent": ["error", 2],
     "semi": ["error", "never"],
@@ -11,6 +12,6 @@
     "browser": true
   },
   "parserOptions": {
-    "ecmaVersion": 8
+    "ecmaVersion": 2018
   }
 }
