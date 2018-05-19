@@ -2,7 +2,14 @@
   "name": "node-base",
   "version": "0.0.1",
   "scripts": {
-    "start": "nodemon ."
+    "start": "nodemon .",
+    "migrate": "./node_modules/.bin/sequelize db:migrate",
+    "migrate:undo": "./node_modules/.bin/sequelize db:migrate:undo",
+    "migrate:undo:all": "./node_modules/.bin/sequelize db:migrate:undo:all",
+    "seed:all": "./node_modules/.bin/sequelize db:seed:all",
+    "seed:undo:all": "./node_modules/.bin/sequelize db:seed:undo:all",
+    "createmodel": "./node_modules/.bin/sequelize model:create",
+    "createmigrate": "node_modules/.bin/sequelize migration:generate"
   },
   "repository": "node server",
   "author": "Hung <hung.dang980@gmail.com>",
@@ -25,6 +32,7 @@
     "request": "^2.85.0",
     "sequelize": "^4.37.6",
     "sequelize-cli": "^4.0.0",
+    "shortid": "^2.2.8",
     "uuid": "^3.2.1",
     "winston": "^2.4.2"
   },

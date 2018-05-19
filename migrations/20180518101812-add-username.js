@@ -1,33 +1,17 @@
 module.exports = {
-  up: (queryInterface, Sequelize) =>
-    queryInterface.sequelize.transaction(t =>
-      Promise.all([
-        queryInterface.addColumn('users', 'password', Sequelize.STRING, { transaction: t }),
-        queryInterface.addColumn('users', 'resetPasswordToken', Sequelize.STRING, {
-          transaction: t,
-        }),
-        queryInterface.addColumn('users', 'resetPasswordExpires', Sequelize.DATE, {
-          transaction: t,
-        }),
-      ])), /*      Add altering commands here.
-      Return a promise to correctly handle asynchronicity.
+  up: async (queryInterface, Sequelize) => {
+    await queryInterface.addColumn('users', 'password', {
+      type: Sequelize.STRING,
+      allowNull: false,
+    })
+    await queryInterface.addColumn('users', 'username', {
+      type: Sequelize.STRING,
+      allowNull: false,
+    })
+  },
 
-      Example:
-      return queryInterface.createTable('users', { id: Sequelize.INTEGER });
-    */
-
-  down: async (queryInterface, Sequelize) =>
-    [
-      await queryInterface.removeColumn('users', 'facebook_id'),
-      await queryInterface.removeColumn('users', 'twitter_id'),
-      await queryInterface.removeColumn('users', 'gender'),
-    ]
-    /*
-      Add reverting commands here.
-      Return a promise to correctly handle asynchronicity.
-
-      Example:
-      return queryInterface.dropTable('users');
-    */
-  ,
+  down: async (queryInterface, Sequelize) => {
+    await queryInterface.removeColumn('users', 'password')
+    await queryInterface.removeColumn('users', 'username')
+  },
 }

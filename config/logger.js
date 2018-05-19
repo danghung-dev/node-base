@@ -1,43 +1,49 @@
+const config = require('./config')
 const winston = require('winston')
-// const moment = require('moment')
 
-// const options = {
-//   file: {
-//     level: 'info',
-//     filename: process.env.LOG_PATH || `${__dirname}/logs/app.log`,
-//     handleExceptions: true,
-//     json: true,
-//     maxsize: 5242880, // 5MB
-//     maxFiles: 5,
-//     colorize: false,
-//   },
-//   console: {
-//     level: 'debug',
-//     // format: developmentFormat,
-//     handleExceptions: true,
-//     json: false,
-//     colorize: true,
-//   },
-// }
+class Logger {
+  constructor() {
+    if (config.env === 'production' && config.log_server && config.log_server_port) {
+      this.fluent = require('fluent-logger')
+      this.fluent.configure('my_tag', {
+        host: config.log_server,
+        port: config.log_server_port,
+        timeout: 3.0,
+        reconnectInterval: 600000, // 10 minutes
+      })
+    }
+    this.winston = new winston.Logger({
+      transports: [new winston.transports.Console()],
+    })
+  }
+  sendLog(message, type) {
+    if (this.fluent) {
+      let sendMess
+      if (!(message instanceof Object)) {
+        sendMess = { message }
+      } else {
+        sendMess = message
+      }
+      this.fluent.emit(type, sendMess)
+    }
+    this.winston.log(type, message)
+  }
+  log(data) {
+    this.sendLog(data, 'log')
+  }
+  warn(data) {
+    this.sendLog(data, 'warn')
+  }
+  info(data) {
+    this.sendLog(data, 'info')
+  }
+  error(data) {
+    this.sendLog(data, 'error')
+  }
+  debug(data) {
+    this.sendLog(data, 'debug')
+  }
+}
 
-// var config = {
-//   host: 'localhost',
-//   port: 24224,
-//   timeout: 3.0,
-//   requireAckResponse: true // Add this option to wait response from Fluentd certainly
-// }
-// var fluentTransport = require('fluent-logger').support.winstonTransport()
-const logger = new winston.Logger({
-  transports: [
-    // new fluentTransport('fluentd', config),
-    new winston.transports.Console(),
-  ],
-})
-
-// logger.on('logging', (transport, level, message, meta) => {
-//   if (meta.end && transport.sender && transport.sender.end) {
-//     transport.sender.end()
-//   }
-// })
-
-module.exports = logger
+const instance = new Logger()
+module.exports = instance

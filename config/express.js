@@ -9,8 +9,8 @@ const compression = require('compression')
 const morgan = require('morgan')
 const bodyParser = require('body-parser')
 const config = require('./config')
-const log = require('./logger')
 const ApiError = require('./ApiError')
+const logger = require('./logger')
 
 const app = express()
 
@@ -59,6 +59,19 @@ app.use((req, res, next) => {
 // }
 // error handler, send stacktrace only during development
 app.use((err, req, res, next) => {
+  logger.info({
+    req: {
+      body: req.body,
+      query: req.query,
+      baseurl: req.baseUrl,
+      originalUrl: req.originalUrl,
+    },
+    debugError: {
+      message: err.message,
+      status: err.status,
+      stack: err.stack,
+    },
+  })
   res.status(err.status).json({
     message: err.message,
     stack: config.env === 'development' ? err.stack : {},

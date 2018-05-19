@@ -1,24 +1,21 @@
 const httpStatus = require('http-status')
 const ApiError = require('../../config/ApiError')
 const Response = require('../../config/response')
-const Users = require('./users.model')
-const logger = require('../../config/logger')
+const Products = require('./products.model')
 
 const list = (req, res) => {
   const data = 'list'
-  logger.info({ req, res: data })
   return Response.success(res, data)
 }
 
 const create = async (req, res, next) => {
   try {
     const { body } = req
-    const data = { username: body.username, password: body.password }
-    await Users.create(data)
-    // const a = req.query.a.b
+    const data = { name: body.name }
+    await Products.create(data)
     return Response.success(res, data, httpStatus.CREATED)
   } catch (err) {
-    return next(err)
+    return next(new ApiError(err))
   }
 }
 module.exports = { list, create }
