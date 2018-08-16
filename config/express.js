@@ -11,8 +11,39 @@ const bodyParser = require('body-parser')
 const config = require('./config')
 const ApiError = require('./ApiError')
 const logger = require('./logger')
+// const { graphqlExpress, graphiqlExpress } = require('apollo-server-express')
+// const schema = require('../libraries/graphql/schema')
+const graphqlHTTP = require('express-graphql')
+const { buildSchema } = require('graphql')
 
 const app = express()
+
+const schema = buildSchema(`
+  type Query {
+    hello: String
+  }
+`)
+
+const root = { hello: () => 'Hello world!' }
+
+app.use('/graphql', graphqlHTTP({
+  schema,
+  rootValue: root,
+  graphiql: true,
+}))
+
+// app.use('/graphql', bodyParser.json(), graphqlExpress({ schema }))
+// app.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }))
+// app.use('/graphql', bodyParser.json(), (req, res, next) =>
+//   graphqlExpress({
+//     schema,
+//     // context: { user: req.user },
+//   })(req, res, next))
+// // app.use('/graphql', bodyParser.json(), graphqlExpress({ schema }))
+
+// app.use('/graphiql', (req, res, next) =>
+//   graphiqlExpress({ endpointURL: '/graphql' })(req, res, next))
+
 
 if (config.env === 'development') {
   app.use(morgan('dev'))

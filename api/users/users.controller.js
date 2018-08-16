@@ -1,8 +1,10 @@
 const httpStatus = require('http-status')
 const ApiError = require('../../config/ApiError')
 const Response = require('../../config/response')
-const Users = require('./users.model')
 const logger = require('../../config/logger')
+const {
+  Users, sequelize, Sequelize,
+} = require('../../models')
 
 const list = (req, res) => {
   const data = 'list'

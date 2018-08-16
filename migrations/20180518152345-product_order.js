@@ -1,6 +1,6 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    queryInterface.createTable('product_order', {
+    queryInterface.createTable('Product_Order', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -10,7 +10,7 @@ module.exports = {
       productId: {
         type: Sequelize.STRING,
         references: {
-          model: 'products',
+          model: 'Product',
           key: 'id',
         },
         allowNull: false,
@@ -18,7 +18,7 @@ module.exports = {
       orderId: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'orders',
+          model: 'Order',
           key: 'id',
         },
         allowNull: false,
@@ -29,6 +29,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    queryInterface.dropTable('product_order')
+    queryInterface.dropTable('Product_Order')
   },
 }
