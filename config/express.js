@@ -11,26 +11,51 @@ const bodyParser = require('body-parser')
 const config = require('./config')
 const ApiError = require('./ApiError')
 const logger = require('./logger')
-// const { graphqlExpress, graphiqlExpress } = require('apollo-server-express')
-// const schema = require('../libraries/graphql/schema')
-const graphqlHTTP = require('express-graphql')
-const { buildSchema } = require('graphql')
 
-const app = express()
-
-const schema = buildSchema(`
+const { ApolloServer, gql } = require('apollo-server-express')
+// Construct a schema, using GraphQL schema language
+const typeDefs = gql`
   type Query {
     hello: String
   }
-`)
+`
 
-const root = { hello: () => 'Hello world!' }
+// Provide resolver functions for your schema fields
+const resolvers = {
+  Query: {
+    hello: () => 'Hello world!',
+  },
+}
 
-app.use('/graphql', graphqlHTTP({
-  schema,
-  rootValue: root,
-  graphiql: true,
-}))
+const server = new ApolloServer({
+  // These will be defined for both new or existing servers
+  typeDefs,
+  resolvers,
+})
+
+
+// const { graphqlExpress, graphiqlExpress } = require('apollo-server-express')
+// const schema = require('../libraries/graphql/schema')
+// const graphqlHTTP = require('express-graphql')
+// const { buildSchema } = require('graphql')
+
+const app = express()
+server.applyMiddleware({ app }) // app is from an existing express app
+
+
+// const schema = buildSchema(`
+//   type Query {
+//     hello: String
+//   }
+// `)
+
+// const root = { hello: () => 'Hello world!' }
+
+// app.use('/graphql', graphqlHTTP({
+//   schema,
+//   rootValue: root,
+//   graphiql: true,
+// }))
 
 // app.use('/graphql', bodyParser.json(), graphqlExpress({ schema }))
 // app.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }))
