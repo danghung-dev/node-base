@@ -5,6 +5,7 @@ const swaggerSpec = require('../middleware/jsdoc')
 
 const router = new Router()
 router.use('/api-docs/', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
+
 router.use('/users', userRoute)
 
 router.get('/', (req, res) => {
