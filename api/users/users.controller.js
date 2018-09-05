@@ -7,8 +7,8 @@ const {
 } = require('../../models')
 
 const list = (req, res) => {
-  const data = 'list'
-  logger.info({ req, res: data })
+  const data = [{ id: 99 }]
+  // logger.info({ req, res: data })
   return Response.success(res, data)
 }
 

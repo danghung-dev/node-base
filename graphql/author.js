@@ -1,9 +1,10 @@
 const { find, filter } = require('lodash')
 const { posts } = require('./mockdata')
 const { authors } = require('./mockdata')
-// const Post = require('../Post/queries')
+const { gql } = require('apollo-server-express')
 
-const Author = `
+const Author = gql`
+  "This is Author type"
   type Author {
     id: Int!
     firstName: String
@@ -13,6 +14,7 @@ const Author = `
     """
     posts: [Post]
   }
+
   extend type Query {
     author(id: Int!): Author
   }

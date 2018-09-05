@@ -58,12 +58,13 @@
 const { Author, authorResolvers } = require('./author')
 const { PostTypeDef, PostResolvers } = require('./post')
 const { BaseTypedef, BaseResolvers } = require('./base')
-
+const { UserTypedef, UserResolvers } = require('./user')
 const { merge } = require('lodash')
 const { makeExecutableSchema } = require('graphql-tools')
 
 const resolvers = {}
 module.exports = makeExecutableSchema({
-  typeDefs: [Author, PostTypeDef, BaseTypedef],
-  resolvers: merge(resolvers, authorResolvers, PostResolvers, BaseResolvers),
+  typeDefs: [Author, PostTypeDef, BaseTypedef, UserTypedef],
+  resolvers: merge(resolvers, authorResolvers, PostResolvers, BaseResolvers, UserResolvers),
+
 })

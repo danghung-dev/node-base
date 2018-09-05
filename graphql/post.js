@@ -1,9 +1,10 @@
 // Post.js
-const { find, filter } = require('lodash')
+const { find } = require('lodash')
+const { gql } = require('apollo-server-express')
 const { posts } = require('./mockdata')
 const { authors } = require('./mockdata')
 
-const PostTypeDef = `
+const PostTypeDef = gql`
   type Post {
     id: Int!
     title: String

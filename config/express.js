@@ -11,31 +11,22 @@ const bodyParser = require('body-parser')
 const config = require('./config')
 const ApiError = require('./ApiError')
 const logger = require('./logger')
+const UserAPI = require('../graphql/dataSources/user.datasource')
+const schema = require('../graphql')
 
 const VERSION = '/v1'
 
-const { ApolloServer, gql } = require('apollo-server-express')
-// Construct a schema, using GraphQL schema language
-const typeDefs = gql`
-  type Query {
-    hello: String
-  }
-`
-// Provide resolver functions for your schema fields
-const resolvers = {
-  Query: {
-    hello: () => 'Hello world!',
-  },
-}
-const schema = require('../graphql')
+const { ApolloServer } = require('apollo-server-express')
 
-// const server = new ApolloServer({
-//   // These will be defined for both new or existing servers
-//   typeDefs,
-//   resolvers,
-// })
-
-const server = new ApolloServer({ schema })
+const server = new ApolloServer({
+  schema,
+  dataSources: () => ({
+    userAPI: new UserAPI(),
+  }),
+  context: () => ({
+    token: 'foo',
+  }),
+})
 
 const app = express()
 const graphQLPath = `${VERSION}/graphql`
