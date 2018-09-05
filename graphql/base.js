@@ -4,16 +4,16 @@ const BaseTypedef = `
     hello: String
   }
   type Mutation {
-    hello: String
+    hello(id: Int!): String
   }
 `
 
 const BaseResolvers = {
   Query: {
-    hello: () => 'hello world',
+    hello: () => 'Hello world',
   },
   Mutation: {
-    hello: _ => 'hello world',
+    hello: (_, { id }) => `Hello world id: ${id}`,
   },
 }
 module.exports = { BaseTypedef, BaseResolvers }

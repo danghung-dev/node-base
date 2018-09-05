@@ -55,11 +55,11 @@
 //   typeDef as Author,
 //   resolvers as authorResolvers,
 // } = require('./Author/queries')
-const { Author, authorResolvers } = require('./Author/queries')
-const { PostTypeDef, PostResolvers } = require('./Post/queries')
+const { Author, authorResolvers } = require('./author')
+const { PostTypeDef, PostResolvers } = require('./post')
 const { BaseTypedef, BaseResolvers } = require('./base')
 
-const { find, filter, merge } = require('lodash')
+const { merge } = require('lodash')
 const { makeExecutableSchema } = require('graphql-tools')
 
 const resolvers = {}

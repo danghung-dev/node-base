@@ -1,6 +1,6 @@
 const { find, filter } = require('lodash')
-const { posts } = require('../mockdata')
-const { authors } = require('../mockdata')
+const { posts } = require('./mockdata')
+const { authors } = require('./mockdata')
 // const Post = require('../Post/queries')
 
 const Author = `
