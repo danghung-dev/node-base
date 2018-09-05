@@ -12,6 +12,8 @@ const config = require('./config')
 const ApiError = require('./ApiError')
 const logger = require('./logger')
 
+const VERSION = '/v1'
+
 const { ApolloServer, gql } = require('apollo-server-express')
 // Construct a schema, using GraphQL schema language
 const typeDefs = gql`
@@ -19,7 +21,6 @@ const typeDefs = gql`
     hello: String
   }
 `
-
 // Provide resolver functions for your schema fields
 const resolvers = {
   Query: {
@@ -33,42 +34,14 @@ const server = new ApolloServer({
   resolvers,
 })
 
-
-// const { graphqlExpress, graphiqlExpress } = require('apollo-server-express')
-// const schema = require('../libraries/graphql/schema')
-// const graphqlHTTP = require('express-graphql')
-// const { buildSchema } = require('graphql')
-
 const app = express()
-server.applyMiddleware({ app }) // app is from an existing express app
-
-
-// const schema = buildSchema(`
-//   type Query {
-//     hello: String
-//   }
-// `)
-
-// const root = { hello: () => 'Hello world!' }
-
-// app.use('/graphql', graphqlHTTP({
-//   schema,
-//   rootValue: root,
-//   graphiql: true,
-// }))
-
-// app.use('/graphql', bodyParser.json(), graphqlExpress({ schema }))
-// app.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }))
-// app.use('/graphql', bodyParser.json(), (req, res, next) =>
-//   graphqlExpress({
-//     schema,
-//     // context: { user: req.user },
-//   })(req, res, next))
-// // app.use('/graphql', bodyParser.json(), graphqlExpress({ schema }))
-
-// app.use('/graphiql', (req, res, next) =>
-//   graphiqlExpress({ endpointURL: '/graphql' })(req, res, next))
-
+const graphQLPath = `${VERSION}/graphql`
+const jwtCheck = (req, res, next) => {
+  // res.status(401).json({ ok: 1 })
+  next()
+}
+app.use(graphQLPath, jwtCheck)
+server.applyMiddleware({ app, graphQLPath })
 
 if (config.env === 'development') {
   app.use(morgan('dev'))
@@ -89,7 +62,7 @@ app.use(helmet())
 app.use(cors())
 
 // mount all routes on /api path
-app.use('/v1', indexRoute)
+app.use(VERSION, indexRoute)
 
 // if error is not an instanceOf ApiError, convert it.
 app.use((err, req, res, next) => {
