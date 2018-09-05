@@ -27,12 +27,15 @@ const resolvers = {
     hello: () => 'Hello world!',
   },
 }
+const schema = require('../graphql')
 
-const server = new ApolloServer({
-  // These will be defined for both new or existing servers
-  typeDefs,
-  resolvers,
-})
+// const server = new ApolloServer({
+//   // These will be defined for both new or existing servers
+//   typeDefs,
+//   resolvers,
+// })
+
+const server = new ApolloServer({ schema })
 
 const app = express()
 const graphQLPath = `${VERSION}/graphql`
